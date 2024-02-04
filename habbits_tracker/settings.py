@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'rest_framework',
+    'drf_yasg',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'django_celery_beat',
 
     'main',
     'users'
@@ -137,6 +141,9 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
+
+TG_ACCESS_TOKEN = os.getenv('TG_ACCESS_TOKEN')
+
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
