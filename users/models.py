@@ -42,9 +42,9 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name='адрес электронной почты')
-    avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
+    tg_username = models.CharField(max_length=50, unique=True, verbose_name='аккаунт в телеграм', **NULLABLE)
     phone_number = models.CharField(max_length=20, verbose_name='номер телефона', **NULLABLE)
-    city = models.CharField(max_length=50, verbose_name='город', **NULLABLE)
+    is_active = models.BooleanField(default=True, verbose_name='статус активности')
 
     def __str__(self):
         return self.email
