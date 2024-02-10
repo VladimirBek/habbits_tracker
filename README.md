@@ -7,9 +7,11 @@ For basic usage you need to specify next environment variables:
 
 - DB_NAME - name of database
 - DB_USER - name of postgresql user
-- TG_ACCESS_TOKEN = Telegram Bot token
+- DB_PASSWORD - password for database
+- TG_ACCESS_TOKEN - Telegram Bot token
+- TIME_ZONE_SETTINGS - settings for time data in app
 
-run command
+run command in docker
 ```bash
-   python manage.py runserver
+   docker-compose up --build
 ```
