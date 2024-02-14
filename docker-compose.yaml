@@ -8,41 +8,30 @@ services:
       - '6379:6379'
 
   db:
-    image: postgres
-    environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
+    image: postgres:13
+    env_file:
+      - .env
     volumes:
-      - pg_data:/var/lib/postgresql/data/pgdata
+      - pg_data_habbits_tracker:/var/lib/postgresql/data/pgdata_habbits_tracker
     ports:
       - '5432:5432'
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
   app:
     build: .
     tty: true
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - '8001:8000'
-    environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - TG_ACCESS_TOKEN=${TG_ACCESS_TOKEN}
-      - TIME_ZONE_SETTINGS=${TIME_ZONE_SETTINGS}
+    env_file:
+      - .env
     volumes:
       - .:/app
     depends_on:
-      db:
-        condition: service_healthy
+      - db
   celery:
     build: .
+    env_file:
+      - .env
     tty: true
     command: celery -A habbits_tracker worker -l INFO
     depends_on:
@@ -52,10 +41,12 @@ services:
   celery_beat:
     build: .
     tty: true
+    env_file:
+      - .env
     command: celery -A habbits_tracker beat -l INFO -S django
     depends_on:
       - redis
       - app
 
 volumes:
-  pg_data:
+  pg_data_habbits_tracker:
